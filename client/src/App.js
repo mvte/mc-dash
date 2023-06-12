@@ -1,18 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
-import Status from './components/status';
+import { useState } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import SignIn from './components/SignIn';
+import Dashboard from './components/Dashboard';
 
 function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1>hello</h1>
-        <p>
-          <Status />
-        </p>
-      </header>
+      <Routes>
+        <Route path="/"  element={<SignIn />}/>
+        <Route path="/home" element={<Dashboard />}/>
+      </Routes>
     </div>
   );
 }
