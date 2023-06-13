@@ -1,17 +1,17 @@
 const express = require('express');
 const app = express();
-const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 
 const auth = require('./routes/auth');
+const info = require('./routes/info');
 
-app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 
 // link routes
 app.use('/api', auth);
+app.use('/api/info', info);
 
 const port = process.env.PORT || 9000;
 
