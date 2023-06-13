@@ -1,21 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function Status() {
-    const [players, setPlayers] = useState(0);
+    const [players, setPlayers] = useState(-1);
 
-    function updatePlayers() {
-        axios.get("https://api.mcsrvstat.us/2/play.mvte.net ")
+    useEffect(() => {
+        const updatePlayers = async () => {
+          await axios.get("api/info/status")
             .then(res => {
-                setPlayers(res.data.players.online);
+              setPlayers(res.data.players.online);
             })
             .catch(err => {
-                console.log(err);
+              console.log(err);
             });
-    }
+        };
 
-    updatePlayers();
-    setInterval(updatePlayers, 30000);
+        updatePlayers();
+      }, []);
 
     return (
         <p>
