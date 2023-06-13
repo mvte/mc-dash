@@ -8,15 +8,16 @@ make sure you are on node 16
 1. open terminal in `client/`
 2. run `npm i` to install dependencies
 3. then run `npm start`
-4. see website in http://localhost:3000
+4. see website at http://localhost:3000
+5. and while you're here, run `npm run build` so that the server side has something to work with
 
 ### backend
-there's nothing here yet so just sit tight \
-but if you want you can do `cd ../server` \
-then run `npm i` to install dependencies
+1. open terminal in `server/`
+2. run `npm i` to install dependencies
+3. run `node server.js`
+4. see website at http://localhost:9000. note that this port serves the production build. your development environment (on port 3000) will still be able to communicate with this server's api.
 
 ## plans
 - login 
 - figure out docker api to see resource usage
 - maybe make our own api to see server stats
-- 
