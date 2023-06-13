@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = (props) => {
-
     const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
+    
+    const navigate = useNavigate();
 
 	async function loginUser(event) {
         event.preventDefault();
@@ -22,8 +24,8 @@ const SignIn = (props) => {
 		const data = await response.json()
 
 		if (data.user) {
-			localStorage.setItem('token', data.user)
-			window.location.href = '/home'
+			localStorage.setItem('token', data.user);
+			navigate('/home');
 		} else {
 			alert('your username or password is incorrect')
 		}
@@ -45,7 +47,7 @@ const SignIn = (props) => {
                     />
                 <input 
                     value={password}
-					onChange={(e) => setPassword(e.target.value)}
+				    onChange={(e) => setPassword(e.target.value)}
                     name="password" 
                     type="password" 
                     placeholder="password"
