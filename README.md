@@ -9,6 +9,7 @@ make sure you are on node 16
 2. run `npm i` to install dependencies
 3. then run `npm start`
 4. see website at http://localhost:3000
+5. and while you're here, run `npm run build` so that the server side has something to work with
 
 ### backend
 1. open terminal in `server/`
