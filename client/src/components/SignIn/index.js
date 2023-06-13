@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SignIn = (props) => {
     const [username, setUsername] = useState('')
@@ -7,31 +8,31 @@ const SignIn = (props) => {
     
     const navigate = useNavigate();
 
-	async function loginUser(event) {
+    async function loginUser(event) {
         event.preventDefault();
-
-		const response = await fetch('http://localhost:9000/api/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				username,
-				password,
-			}),
-		})
-
-		const data = await response.json()
-
-		if (data.user) {
-			localStorage.setItem('token', data.user);
-			navigate('/home');
-		} else {
-			alert('your username or password is incorrect')
-		}
-
-        event.preventDefault();
-	}
+    
+        try {
+            const response = await axios.post('api/login', {
+                username,
+                password,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            const data = response.data;
+    
+            if (data.user) {
+                localStorage.setItem('token', data.user);
+                navigate('/home');
+            } else {
+                alert('your username or password is incorrect');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <div>
