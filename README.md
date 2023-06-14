@@ -17,6 +17,9 @@ make sure you are on node 16
 3. run `node server.js`
 4. see website at http://localhost:9000. note that this port serves the production build. your development environment (on port 3000) will still be able to communicate with this server's api.
 
+### secret files
+`.env` goes into the `server/` directory, and `certs/` goes into the root
+
 ## plans
 - login 
 - figure out docker api to see resource usage
