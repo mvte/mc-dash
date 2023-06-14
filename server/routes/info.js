@@ -14,14 +14,12 @@ const axios = require('axios');
 
 
 router.get('/name', (req, res) => {
-    res.send({ name: 'mvte' });
+    res.send({ name: "jan's server"});
 });
 
 router.get('/status', (req, res) => {
-    axios.get("https://api.mcsrvstat.us/2/play.mvte.net ")
+    axios.get("https://api.mcsrvstat.us/2/play.mvte.net") //see https://api.mcsrvstat.us/
     .then(response => {
-        cached_response = response.data;
-        lastUpdated = Date.now();
         res.send(response.data);
     }).catch(err => {
         console.log(err);
