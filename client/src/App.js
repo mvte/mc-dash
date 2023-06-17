@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import SignIn from './components/SignIn';
-import Dashboard from './components/Dashboard';
+import { Routes, Route } from 'react-router-dom';
+import SignIn from './pages/SignIn';
+import Dashboard from './pages/Dashboard';
 
 function App() {
 
