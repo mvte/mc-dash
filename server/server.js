@@ -1,6 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+  }
+});
+
 const mongoose = require('mongoose');
 const path = require('path');
 
@@ -15,12 +22,16 @@ app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 app.use('/api', auth);
 app.use('/api/info', info);
 app.use('/api/performance', performance);
+const streamRoute = require('./routes/streams');
+streamRoute(io);
 
 const port = process.env.PORT || 9000;
+
 
 app.get('/api', (req, res) => {
   res.send({ message: 'this is a test message' });
 });
+
 
 // unknown routes should be handled by react
 app.get('/*', (req, res) => {
@@ -28,3 +39,4 @@ app.get('/*', (req, res) => {
 });
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
+server.listen(port+1, () => console.log(`Socket listening on port ${port+1}`));
