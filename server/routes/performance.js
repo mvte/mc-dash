@@ -23,21 +23,6 @@ const docker = new Docker({
 
 let container = docker.getContainer(process.env.CONTAINER_ID);
 
-router.get('/uptime', (req, res) => {
-    container.inspect((err, data) => {
-        if (err) {
-            res.send({ error: err });
-        } else {
-            if(data.State.Status !== "running") {
-                res.send({ uptime: 0 });
-            } else {
-                const uptime = new Date() - new Date(data.State.StartedAt);
-                res.send({ uptime: uptime });
-            }
-        }
-    });
-});
-
 router.get('/stats', (req, res) => {
     container.stats({ stream: false }, (err, data) => {
         if (err) {
