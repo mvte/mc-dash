@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Status from "../status";
+import StatusTest from "../../components/TestComponents/status";
+import GraphTest from "../../components/TestComponents/graphTest";
 
 
 const Dashboard = (props) => {
@@ -14,7 +15,7 @@ const Dashboard = (props) => {
                 localStorage.removeItem('token');
                 navigate('/');
             } else {
-                console.log(user);
+                console.log(user.name + " is logged in");
             }
         } else {
             navigate('/');
@@ -23,9 +24,10 @@ const Dashboard = (props) => {
 
     return <>
         <h1>welcome to your dashboard</h1>
-        <Status />
-    </>;
+        <StatusTest />
+        <GraphTest />
+    </>
 
-};
+}
 
 export default Dashboard;
