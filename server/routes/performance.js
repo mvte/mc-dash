@@ -4,7 +4,8 @@ including
 - memory usage
 - cpu usage
 - uptime
-
+- memory usage as stream
+- cpu usage as stream
 */
 const express = require('express');
 const router = express.Router();
@@ -22,31 +23,55 @@ const docker = new Docker({
 
 let container = docker.getContainer(process.env.CONTAINER_ID);
 
-
-router.get('/memory_usage', (req, res) => {
-    container.stats({ stream: false }, (err, data) => {
+router.get('/uptime', (req, res) => {
+    container.inspect((err, data) => {
         if (err) {
             res.send({ error: err });
         } else {
-            console.log(data.memory_stats);
-            const usedMemory = data.memory_stats.usage;
-            const usageAsPercentage = (usedMemory / data.memory_stats.limit) * 100;
-            console.log(usageAsPercentage);
-            res.send({ memory_usage: usageAsPercentage });
+            if(data.State.Status !== "running") {
+                res.send({ uptime: 0 });
+            } else {
+                const uptime = new Date() - new Date(data.State.StartedAt);
+                res.send({ uptime: uptime });
+            }
         }
     });
 });
 
-router.get('/cpu_usage', (req, res) => {
+router.get('/stats', (req, res) => {
     container.stats({ stream: false }, (err, data) => {
         if (err) {
             res.send({ error: err });
         } else {
+            //calc memory usage
+            const usedMemory = data.memory_stats.usage;
+            const memUsageAsPercentage = (usedMemory / data.memory_stats.limit) * 100;
+
+            //calc cpu usage
             const cpuDelta = data.cpu_stats.cpu_usage.total_usage - data.precpu_stats.cpu_usage.total_usage;
             const systemDelta = data.cpu_stats.system_cpu_usage - data.precpu_stats.system_cpu_usage;
-            const usageAsPercentage = (cpuDelta / systemDelta) * data.cpu_stats.online_cpus * 100;
-            console.log(usageAsPercentage);
-            res.send({ cpu_usage: usageAsPercentage });
+            const cpuUsageAsPercentage = (cpuDelta / systemDelta) * data.cpu_stats.online_cpus * 100;
+
+            res.send({
+                memoryUsage: memUsageAsPercentage,
+                cpuUsage: cpuUsageAsPercentage,
+                memoryLimit: data.memory_stats.limit,
+            });
+        }
+    });
+});
+
+router.get('/uptime', (req, res) => {
+    container.inspect((err, data) => {
+        if (err) {
+            res.send({ error: err });
+        } else {
+            if(data.State.Status !== "running") {
+                res.send({ uptime: 0 });
+            } else {
+                const uptime = new Date() - new Date(data.State.StartedAt);
+                res.send({ uptime: uptime });
+            }
         }
     });
 });
