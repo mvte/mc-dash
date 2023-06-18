@@ -8,11 +8,17 @@ const { Server } = require('socket.io');
 //create server and socket
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
+const perfIo = new Server(httpServer, {
   cors: {
     origin: '*',
   },
   path: '/api/performance/stream',
+});
+const consoleIo = new Server(httpServer, {
+  cors: {
+    origin: '*',
+  },
+  path: '/api/console/stream',
 });
 
 //connect to db
@@ -22,7 +28,9 @@ const mongoose = require('mongoose');
 const auth = require('./routes/auth');
 const info = require('./routes/info');
 const performance = require('./routes/performance');
-const streamRoute = require('./routes/streams');
+const consoleRoute = require('./routes/console');
+const perfStream = require('./streams/performance');
+const consoleStream = require('./streams/console');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
@@ -31,7 +39,9 @@ app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 app.use('/api', auth);
 app.use('/api/info', info);
 app.use('/api/performance', performance);
-streamRoute(io);
+app.use('/api/console', consoleRoute);
+perfStream(perfIo);
+consoleStream(consoleIo);
 
 const port = process.env.PORT || 9000;
 
