@@ -14,7 +14,7 @@ let container = docker.getContainer(process.env.CONTAINER_ID);
 
 module.exports = function (io) {
     io.on('connection', (socket) => {
-        console.log('client connected');
+        console.log('client connected to performance stream');
 
         container.stats({ stream: true }, (err, stream) => {
             if (err) {
@@ -46,6 +46,10 @@ module.exports = function (io) {
                     stream.destroy();
                 });
             }
+        });
+
+        socket.on('disconnect', () => {
+            console.log('client disconnected');
         });
     });
 }
