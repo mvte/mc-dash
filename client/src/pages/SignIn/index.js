@@ -1,20 +1,26 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 
 const SignIn = (props) => {
-    const [username, setUsername] = useState('')
-	const [password, setPassword] = useState('')
-    
     const navigate = useNavigate();
 
-    async function loginUser(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
-    
+        const data = new FormData(event.currentTarget);
+        console.log('username: ' + data.get('username') + ' password: ' + data.get('password'));
+
+        const username = data.get('username');
+        const password = data.get('password');
         try {
             const response = await axios.post('api/login', {
-                username,
-                password,
+                username: username,
+                password: password
             }, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,28 +41,50 @@ const SignIn = (props) => {
     }
 
     return (
-        <div>
-            <h1>hello</h1>
-            <form onSubmit={loginUser}>
-                <input 
-                    value={username}
-					onChange={(e) => setUsername(e.target.value)}
-                    name="username" 
-                    type="text" 
-                    placeholder="username" 
-
+        <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <Box
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Typography component="h1" variant="h5">
+                    hello                       
+                </Typography>
+                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="username"
+                        label="username"
+                        name="username"
                     />
-                <input 
-                    value={password}
-				    onChange={(e) => setPassword(e.target.value)}
-                    name="password" 
-                    type="password" 
-                    placeholder="password"
-                />
-                <button type="submit">sign in</button>
-            </form>
-        </div>
-    )
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="password"
+                        type="password"
+                        id="password"
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="secondary"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Sign In
+                    </Button>
+                </Box>
+            </Box>
+        </Container>
+    );
 }
 
 export default SignIn;
