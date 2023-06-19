@@ -13,7 +13,6 @@ const SignIn = (props) => {
     async function handleSubmit(event) {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log('username: ' + data.get('username') + ' password: ' + data.get('password'));
 
         const username = data.get('username');
         const password = data.get('password');
@@ -29,8 +28,8 @@ const SignIn = (props) => {
     
             const data = response.data;
     
-            if (data.user) {
-                localStorage.setItem('token', data.user);
+            if (data.ok) {
+                localStorage.setItem('token', data.token);
                 navigate('/home');
             } else {
                 alert('your username or password is incorrect');
