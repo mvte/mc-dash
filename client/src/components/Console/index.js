@@ -43,6 +43,7 @@ const Console = (props) => {
         }, {
             headers: {
                 'Content-Type': 'application/json',
+                'x-auth-token': localStorage.getItem('token')
             },
         }).catch((error) => {
             console.error(error);
