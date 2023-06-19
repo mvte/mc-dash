@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Docker = require('dockerode');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
+const { admin, user } = require('../middleware/roles');
 
 const docker = new Docker({
     protocol: 'https',
@@ -14,7 +17,7 @@ const docker = new Docker({
 
 let container = docker.getContainer(process.env.CONTAINER_ID);
 
-router.post('/command', (req, res) => {
+router.post('/command', [auth, admin], (req, res) => {
     const command = req.body.command;
 
     container.exec({
@@ -25,7 +28,9 @@ router.post('/command', (req, res) => {
             res.send({ error: err });
         } else {
             exec.start();
-            res.send({ message: 'command sent' });
+            res.status(200).send({ 
+                ok: true,
+                message: 'command sent' });
         }
     });
 });
