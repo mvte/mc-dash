@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import Layout from './components/Layout';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -19,6 +20,7 @@ function App() {
         <CssBaseline />
         <Routes>
           <Route path="/"  element={<SignIn />}/>
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/home" element={<Layout />}>
             <Route index element={<Dashboard />} />
           </Route>
