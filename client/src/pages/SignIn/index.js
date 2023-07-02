@@ -32,7 +32,7 @@ const SignIn = (props) => {
                 localStorage.setItem('token', data.token);
                 navigate('/home');
             } else {
-                alert('your username or password is incorrect');
+                alert(data.error);
             }
         } catch (error) {
             console.error(error);
@@ -80,6 +80,9 @@ const SignIn = (props) => {
                     >
                         Sign In
                     </Button>
+                    <Typography component="p" variant="p">
+                        don't have an account? <a href="/signup">sign up</a>
+                    </Typography>
                 </Box>
             </Box>
         </Container>
