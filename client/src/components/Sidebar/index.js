@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import  { Link } from 'react-router-dom';
 import * as BsIcons from 'react-icons/bs';
 import './index.css';
 
-const Sidebar = () => {
-    const [collapsed, setCollapsed] = useState(false);
+const Sidebar = (props) => {
+    const { collapsed, handleToggleCollapse } = props;
     const iconSize = 20;
-
-    const handleToggleCollapse = () => {
-        setCollapsed(!collapsed);
-    };
   
     const menuItems = [
         {
@@ -33,7 +29,7 @@ const Sidebar = () => {
             icon: <BsIcons.BsMap size={iconSize}/>,
         },
         {
-            name: 'logout',
+            name: 'logout', 
             path: '/logout',
             icon: <BsIcons.BsBoxArrowRight size={iconSize}/>,
         }
@@ -54,7 +50,7 @@ const Sidebar = () => {
                     </li>
                 ))}
             </ul>
-        </div>
+        </div>  
     );
  };
 
