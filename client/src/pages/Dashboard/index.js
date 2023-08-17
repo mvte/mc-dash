@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StatusTest from "../../components/TestComponents/status";
 import GraphTest from "../../components/TestComponents/graphTest";
-import Console from "../../components/Console";
 import "./index.css";
 
 
@@ -30,7 +29,6 @@ const Dashboard = (props) => {
         <h1>welcome to your dashboard, {name}</h1>
         <StatusTest />
         <GraphTest />
-        <Console />
     </>
 
 }
