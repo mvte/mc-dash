@@ -30,11 +30,16 @@ const Sidebar = (props) => {
         },
         {
             name: 'logout', 
-            path: '/logout',
-            icon: <BsIcons.BsBoxArrowRight size={iconSize}/>,
-        }
+            path: '/',
+            icon: <BsIcons.BsBoxArrowRight size={iconSize}/>
+        },
     ];
 
+    function handleLogout() {
+        console.log("calling handle logout");
+        if(localStorage.getItem('token'))
+            localStorage.removeItem('token');
+    }
 
     return (
         <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
@@ -43,7 +48,7 @@ const Sidebar = (props) => {
             </button>
             <ul className="menu-items">
                 {menuItems.map((item, index) => (
-                    <li key={index} className="menu-item">
+                    <li key={index} className="menu-item" onClick={item.name === "logout" ? handleLogout : null}>
                     <Link to={item.path}>
                         {collapsed ? item.icon : item.name}
                     </Link>
