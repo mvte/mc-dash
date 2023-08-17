@@ -46,7 +46,7 @@ const Sidebar = (props) => {
             <button className={`toggle-button ${collapsed ? 'collapsed' : ''}`} onClick={handleToggleCollapse}>
                 {collapsed ? <BsIcons.BsChevronRight size={iconSize}/> : <>menu <BsIcons.BsChevronLeft size={iconSize}/></>}
             </button>
-            <ul className="menu-items">
+            <ul className={`menu-items ${collapsed ? 'collapsed' : ''}`}>
                 {menuItems.map((item, index) => (
                     <li key={index} className="menu-item" onClick={item.name === "logout" ? handleLogout : null}>
                     <Link to={item.path}>
