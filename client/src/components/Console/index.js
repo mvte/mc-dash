@@ -110,7 +110,7 @@ const Console = (props) => {
                     readOnly: true,
                 }}
             />
-                <TextField
+            {props.permissionToSend && <TextField
                     id="outlined-static"
                     name="console-input"
                     type="form"
@@ -120,10 +120,11 @@ const Console = (props) => {
                     onFocus={scrollToBottom}
                     onChange={(event) => setInputValue(event.target.value)}
                     onKeyDown={handleKeyDown}
+                    autoComplete='off'
                     InputProps={{
                         startAdornment: <InputAdornment position="start">{'>'}</InputAdornment>,
                     }}
-                />
+                />}
         </Box>
     );
 }
