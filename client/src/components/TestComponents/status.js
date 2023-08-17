@@ -14,7 +14,7 @@ function StatusTest() {
 
     /*
         the use effect hook is used to run code when the component is "mounted", or first rendered
-        the empty array as the second argument means that the code will only run oncezzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzSDddddddddddddddd
+        the empty array as the second argument means that the code will only run once
         if you want the code to run when a certain variable changes, put that variable in the array
 
     */
