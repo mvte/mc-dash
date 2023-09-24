@@ -9,7 +9,7 @@ const Card = styled('div')`
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     color: #fff;
     font-size: 1.2rem;
-    font-weight: 500;
+    font-weight: 400;
     text-align: left;
     display: flex;
     flex-direction: column;
@@ -17,4 +17,9 @@ const Card = styled('div')`
     align-items: left;
 `;
 
-export default Card;
+const TallCard = styled(Card)`
+    height: 420px;
+`;
+
+export { TallCard };
+export  { Card };
