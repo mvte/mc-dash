@@ -39,6 +39,8 @@ function App() {
           <Route path="/console" element={<Layout />}>
             <Route index element={<Console />} />
           </Route>
+          <Route path="*" element={<h1>404</h1>}>
+          </Route>
         </Routes>
       </ThemeProvider>
   );
