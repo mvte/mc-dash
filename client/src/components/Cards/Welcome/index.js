@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "../CardConsts";
+import { Card } from "../CardConsts";
 import "./index.css";
 
 
