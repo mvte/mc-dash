@@ -18,7 +18,7 @@ router.get('/name', (req, res) => {
 });
 
 router.get('/status', (req, res) => {
-    axios.get("https://api.mcsrvstat.us/2/play.mvte.net") //see https://api.mcsrvstat.us/
+    axios.get("https://api.mcstatus.io/v2/status/java/play.mvte.net")
     .then(response => {
         res.send(response.data);
     }).catch(err => {
@@ -26,5 +26,6 @@ router.get('/status', (req, res) => {
         res.send({ error: err });
     });
 });
+
 
 module.exports = router;
