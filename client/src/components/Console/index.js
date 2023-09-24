@@ -38,7 +38,7 @@ const Console = (props) => {
                 cursor: prev.cursor + 1
             }
         });
-        axios.post('/api/console/command', {
+        axios.post('/api/container/command', {
             command: inputValue
         }, {
             headers: {
