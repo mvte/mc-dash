@@ -28,7 +28,7 @@ const mongoose = require('mongoose');
 const auth = require('./routes/auth');
 const info = require('./routes/info');
 const performance = require('./routes/performance');
-const consoleRoute = require('./routes/console');
+const container = require('./routes/container');
 const perfStream = require('./streams/performance');
 const consoleStream = require('./streams/console');
 
@@ -39,7 +39,7 @@ app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 app.use('/api', auth);
 app.use('/api/info', info);
 app.use('/api/performance', performance);
-app.use('/api/console', consoleRoute);
+app.use('/api/container', container);
 perfStream(perfIo);
 consoleStream(consoleIo);
 
