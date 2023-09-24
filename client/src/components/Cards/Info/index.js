@@ -9,6 +9,20 @@ const Info = (props) => {
         padding-bottom: 2rem;
     `;
 
+    const convertUptime = (uptime) => {
+        let ms = uptime;
+        let minutes = Math.floor((ms / (1000 * 60)) % 60);
+        let hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+        let days = Math.floor((ms / (1000 * 60 * 60 * 24)) % 365);
+
+        let uptimeString = "";
+        if (days > 0) uptimeString += `${days}d `;
+        if (hours > 0) uptimeString += `${hours}h `;
+        if (minutes > 0) uptimeString += `${minutes}m `;
+
+        return uptimeString;
+    }
+
     return <>
         <Card>
             at a glance
@@ -24,7 +38,7 @@ const Info = (props) => {
                     }
                 </li>
                 <li>
-                    uptime: {props.uptime}  
+                    uptime: {convertUptime(props.uptime)}  
                 </li>
                 <li>
                     <b>version:</b> {props.version}
