@@ -35,4 +35,48 @@ router.post('/command', [auth, admin], (req, res) => {
     });
 });
 
+router.post('/start', [auth, admin], (req, res) => {
+    container.start((err, data) => {
+        if (err) {
+            console.log(err);
+            res.send({ error: err });
+        } else {
+            res.status(200).send({
+                ok: true,
+                message: 'server started'
+            });
+        }
+    });
+});
+
+router.post('/stop', [auth, admin], (req, res) => {
+    container.stop((err, data) => {
+        if (err) {
+            console.log(err);
+            res.send({ error: err });
+        } else {
+            res.status(200).send({
+                ok: true,
+                message: 'server stopped'
+            });
+        }
+    });
+});
+
+router.post('/restart', [auth, admin], (req, res) => {
+    container.restart((err, data) => {
+        if (err) {
+            console.log(err);
+            res.send({ error: err });
+        } else {
+            res.status(200).send({
+                ok: true,
+                message: 'server restarted'
+            });
+        }
+    });
+});
+
+
+
 module.exports = router;
