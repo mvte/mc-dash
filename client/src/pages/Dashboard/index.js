@@ -1,21 +1,33 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid';
-import StartStop from "../../components/Cards/StartStop";
 import StatusTest from "../../components/TestComponents/status";
 import GraphTest from "../../components/TestComponents/graphTest";
 import "./index.css";
 
+import StartStop from "../../components/Cards/StartStop";
 import Welcome from "../../components/Cards/Welcome";
 import Info from "../../components/Cards/Info";
 import Players from "../../components/Cards/Players";
 import Files from "../../components/Cards/Files";
 import CPU from "../../components/Cards/CPU";
 import Memory from "../../components/Cards/Memory";
+import axios from "axios";
 
 const Dashboard = (props) => {
     const navigate = useNavigate();
     const [name, setName] = useState();
+    const [glance, setGlance] = useState({
+        ip: "loading...",
+        status: "loading...",
+        version: "loading...",
+        motd: "loading...",
+        playersOn: "loading...",
+        maxPlayers: "loading...",
+        uptime: "loading..."
+    });
+    const [playerList, setPlayerList] = useState([]);
+
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -31,16 +43,57 @@ const Dashboard = (props) => {
         } else {
             navigate('/');
         }
-    }, [navigate]);
+        
+        const updateStatus = async () => {
+            await axios.get("api/info/status") //this route gets the server status
+              .then(res => {
+                    setGlance(g => {
+                        return {
+                            ...g,
+                            ip: res.data.host,
+                            status: res.data.online ? "online" : "offline",
+                            version: res.data.version.name_clean,
+                            motd: res.data.motd.clean,
+                            playersOn: res.data.players.online,
+                            maxPlayers: res.data.players.max
+                        }
+                    });
 
-    const players = [];
-    for(let i = 0; i < 10; i++) {
-        players.push({
-            name: "player" + i,
-            uuid: "13020100-a2f2-4367-b671-1449011eda6f",
-            icon: "https://crafatar.com/avatars/13020100-a2f2-4367-b671-1449011eda6f?size=32&overlay"
-        });
-    }
+                    let players = [];
+                    let list = res.data.players.list;
+                    for(let i = 0; i < list.length; i++) {
+                        players.push({
+                            name: list[i].name_clean,
+                            uuid: list[i].uuid,
+                            icon: "https://crafatar.com/avatars/" + list[i].uuid + "?size=32&overlay"
+                        });
+                    }
+
+                    setPlayerList(players);
+              })
+              .catch(err => {
+                  console.log(err);
+              });
+          }
+          updateStatus();
+
+          const updateUptime = async () => {
+            await axios.get("api/performance/uptime") //this route gets the server uptime in milliseconds
+                .then(res => {
+                    setGlance(g => {
+                        return {
+                            ...g,
+                            uptime: res.data.uptime
+                        }
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
+        updateUptime();
+
+    }, [navigate]);
 
     return <>
         <Grid container spacing={2}>
@@ -52,17 +105,17 @@ const Dashboard = (props) => {
             </Grid>
             <Grid item xs={4}>
                 <Info
-                    ip="play.mvte.net"
-                    status="online"
-                    uptime="1d 2h 3m"
-                    version="fabric - 1.20.2"
-                    motd="woo we love minecraft!"
-                    players={0}
-                    maxPlayers={2}
+                    ip={glance.ip}
+                    status={glance.status}
+                    uptime={glance.uptime}
+                    version={glance.version}
+                    motd={glance.motd}
+                    players={glance.playersOn}
+                    maxPlayers={glance.maxPlayers}
                  />
             </Grid>
             <Grid item xs={4}>
-                <Players players={players} maxPlayers={2} />  
+                <Players players={playerList} maxPlayers={glance.maxPlayers} />  
             </Grid>
             <Grid item xs={4}>
                 <Files />
@@ -80,8 +133,6 @@ const Dashboard = (props) => {
                 <GraphTest />
             </Grid>
         </Grid>
-        
-        
     </>
 }
 
