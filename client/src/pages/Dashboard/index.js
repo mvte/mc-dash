@@ -28,6 +28,52 @@ const Dashboard = (props) => {
     });
     const [playerList, setPlayerList] = useState([]);
 
+    const updateStatus = async () => {
+        await axios.get("api/info/status") //this route gets the server status
+          .then(res => {
+                setGlance(g => {
+                    return {
+                        ...g,
+                        ip: res.data.host,
+                        status: res.data.online ? "online" : "offline",
+                        version: res.data.version.name_clean,
+                        motd: res.data.motd.clean,
+                        playersOn: res.data.players.online,
+                        maxPlayers: res.data.players.max
+                    }
+                });
+
+                let players = [];
+                let list = res.data.players.list;
+                for(let i = 0; i < list.length; i++) {
+                    players.push({
+                        name: list[i].name_clean,
+                        uuid: list[i].uuid,
+                        icon: "https://crafatar.com/avatars/" + list[i].uuid + "?size=32&overlay"
+                    });
+                }
+
+                setPlayerList(players);
+          })
+          .catch(err => {
+              console.log(err);
+          });
+      }
+
+      const updateUptime = async () => {
+        await axios.get("api/performance/uptime") //this route gets the server uptime in milliseconds
+            .then(res => {
+                setGlance(g => {
+                    return {
+                        ...g,
+                        uptime: res.data.uptime
+                    }
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -44,55 +90,16 @@ const Dashboard = (props) => {
             navigate('/');
         }
         
-        const updateStatus = async () => {
-            await axios.get("api/info/status") //this route gets the server status
-              .then(res => {
-                    setGlance(g => {
-                        return {
-                            ...g,
-                            ip: res.data.host,
-                            status: res.data.online ? "online" : "offline",
-                            version: res.data.version.name_clean,
-                            motd: res.data.motd.clean,
-                            playersOn: res.data.players.online,
-                            maxPlayers: res.data.players.max
-                        }
-                    });
-
-                    let players = [];
-                    let list = res.data.players.list;
-                    for(let i = 0; i < list.length; i++) {
-                        players.push({
-                            name: list[i].name_clean,
-                            uuid: list[i].uuid,
-                            icon: "https://crafatar.com/avatars/" + list[i].uuid + "?size=32&overlay"
-                        });
-                    }
-
-                    setPlayerList(players);
-              })
-              .catch(err => {
-                  console.log(err);
-              });
-          }
-          updateStatus();
-
-          const updateUptime = async () => {
-            await axios.get("api/performance/uptime") //this route gets the server uptime in milliseconds
-                .then(res => {
-                    setGlance(g => {
-                        return {
-                            ...g,
-                            uptime: res.data.uptime
-                        }
-                    });
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        }
+        updateStatus();
         updateUptime();
 
+        const timer = setInterval(() => {
+            updateStatus();
+            updateUptime();
+            console.log('updating status and uptime');
+        }, 1000*60*2);
+
+        return () => clearInterval(timer);
     }, [navigate]);
 
     return <>
