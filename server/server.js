@@ -29,6 +29,7 @@ const auth = require('./routes/auth');
 const info = require('./routes/info');
 const performance = require('./routes/performance');
 const container = require('./routes/container');
+const dataGrab = require('./routes/datagrab');
 const perfStream = require('./streams/performance');
 const consoleStream = require('./streams/console');
 
@@ -40,6 +41,7 @@ app.use('/api', auth);
 app.use('/api/info', info);
 app.use('/api/performance', performance);
 app.use('/api/container', container);
+app.use('/api/datagrab', dataGrab);
 perfStream(perfIo);
 consoleStream(consoleIo);
 
