@@ -18,7 +18,7 @@ let tree_cache = null;
 let cache_expire = null;
 
 async function buildTree(directory) {
-    const tree = { name: directory, children: [] };
+    const tree = { path: directory, children: [] };
     
     try {
         const list = await client.list(directory);
@@ -28,7 +28,10 @@ async function buildTree(directory) {
                 const subtree = await buildTree(`${directory}/${item.name}`);   
                 tree.children.push(subtree);
             } else if (item.type === ftp.FileType.File) {
-                tree.children.push({ name: item.name });
+                tree.children.push({ 
+                    name: item.name, 
+                    path: `${directory}/${item.name}`
+                });
             }
         }
     } catch (err) {
@@ -42,7 +45,10 @@ async function buildTree(directory) {
         }
     }
 
-    return tree;
+    return {
+        name: directory.split('/').pop(),
+        ...tree,
+    }
 }
 
 router.get('/tree', async (req, res) => {
@@ -59,6 +65,7 @@ router.get('/tree', async (req, res) => {
                 tree_cache = tree;
                 cache_expire = Date.now() + 1000 * 60 * 60 * 24; // 24 hours
                 res.send(tree);
+                console.log('tree built');
             }).catch(err => {
                 console.log(err);
                 res.send({
