@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import { styled } from '@mui/material/styles';
 
 const Layout = styled('div')`
-    margin: 20px 100px;
+    margin: 20px 8%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
