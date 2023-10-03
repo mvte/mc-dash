@@ -27,6 +27,8 @@ const Dashboard = (props) => {
         uptime: "loading..."
     });
     const [playerList, setPlayerList] = useState([]);
+    const [tree, setTree] = useState({});
+
 
     const updateStatus = async () => {
         await axios.get("api/info/status") //this route gets the server status
@@ -75,6 +77,17 @@ const Dashboard = (props) => {
             });
     }
 
+    const updateTree = async () => {
+        await axios.get("api/datagrab/tree")
+            .then(res => {
+                console.log(res.data);
+                setTree(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if(token) {
@@ -92,6 +105,7 @@ const Dashboard = (props) => {
         
         updateStatus();
         updateUptime();
+        updateTree();
 
         const timer = setInterval(() => {
             updateStatus();
@@ -125,7 +139,7 @@ const Dashboard = (props) => {
                 <Players players={playerList} maxPlayers={glance.maxPlayers} />  
             </Grid>
             <Grid item xs={4}>
-                <Files />
+                <Files tree={tree}/>
             </Grid>
             <Grid item xs={6}>
                 <CPU />
