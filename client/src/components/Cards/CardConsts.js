@@ -21,5 +21,4 @@ const TallCard = styled(Card)`
     height: 420px;
 `;
 
-export { TallCard };
-export  { Card };
+export { TallCard, Card };
