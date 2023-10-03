@@ -21,4 +21,23 @@ const TallCard = styled(Card)`
     height: 420px;
 `;
 
-export { TallCard, Card };
+const ScrollableDiv = styled('div')`
+        overflow-y: scroll;
+        height: 100%;
+        border: 1px solid gray;
+        border-radius: 5px;
+        &::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+            $-track {
+                background-color: rgb(255 255 255 / 50%);
+                border-radius: 10px;
+            }
+            &-thumb {
+                background-color: #fff;
+                border-radius: 10px;
+            }
+        }
+    `;
+
+export { TallCard, Card, ScrollableDiv };

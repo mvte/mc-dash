@@ -1,26 +1,6 @@
-import { Card } from '../CardConsts';
-import styled from '@mui/material/styles/styled';
+import { Card, ScrollableDiv } from '../CardConsts';
 
 const Players = (props) => {
-    const ScrollableDiv = styled('div')`
-        overflow-y: scroll;
-        height: 100%;
-        border: 1px solid gray;
-        border-radius: 5px;
-        &::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-            $-track {
-                background-color: rgb(255 255 255 / 50%);
-                border-radius: 10px;
-            }
-            &-thumb {
-                background-color: #fff;
-                border-radius: 10px;
-            }
-        }
-    `;
-
     return <>
         <Card>
             <b>players online</b>
