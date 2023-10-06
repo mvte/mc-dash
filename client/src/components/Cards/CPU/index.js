@@ -38,6 +38,7 @@ const CPU = (props) => {
         scales: {
             y: {
                 beginAtZero: true,
+                max: 100,
             },
         },
         elements: {
@@ -62,13 +63,20 @@ const CPU = (props) => {
                     const timeMod = timeSince % 10;
                     intervalLabel = timeMod < 1 ? (timeSince - timeMod) + "s" : "";
                 }
+                
+                let newLabels = [...prev.labels, intervalLabel];
+                let newData = [...prev.datasets[0].data, data.cpuUsage];
+                if(prev.datasets[0].data.length > 60) {
+                    newLabels = newLabels.slice(1);
+                    newData = newData.slice(1);
+                }
 
                 return {
-                    labels: [...prev.labels, intervalLabel],
+                    labels: newLabels,
                     datasets: [
                         {
                             ...prev.datasets[0],
-                            data: [...prev.datasets[0].data, data.cpuUsage],
+                            data: newData,
                         },
                     ],
                 }
