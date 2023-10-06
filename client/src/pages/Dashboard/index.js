@@ -38,10 +38,10 @@ const Dashboard = (props) => {
                         ...g,
                         ip: res.data.host,
                         status: res.data.online ? "online" : "offline",
-                        version: res.data.version.name_clean,
-                        motd: res.data.motd.clean,
-                        playersOn: res.data.players.online,
-                        maxPlayers: res.data.players.max
+                        version: res.data.version?.name_clean,
+                        motd: res.data.motd?.clean,
+                        playersOn: res.data.players?.online,
+                        maxPlayers: res.data.players?.max
                     }
                 });
 
@@ -49,8 +49,8 @@ const Dashboard = (props) => {
                 let list = res.data.players.list;
                 for(let i = 0; i < list.length; i++) {
                     players.push({
-                        name: list[i].name_clean,
-                        uuid: list[i].uuid,
+                        name: list[i]?.name_clean,
+                        uuid: list[i]?.uuid,
                         icon: "https://crafatar.com/avatars/" + list[i].uuid + "?size=32&overlay"
                     });
                 }
