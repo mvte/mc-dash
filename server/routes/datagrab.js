@@ -18,7 +18,11 @@ let tree_cache = null;
 let cache_expire = null;
 
 async function buildTree(directory) {
-    const tree = { path: directory, children: [] };
+    const tree = { 
+        path: directory, 
+        children: [], 
+        type: ftp.FileType.Directory,
+    };
     
     try {
         const list = await client.list(directory);
@@ -30,7 +34,8 @@ async function buildTree(directory) {
             } else if (item.type === ftp.FileType.File) {
                 tree.children.push({ 
                     name: item.name, 
-                    path: `${directory}/${item.name}`
+                    path: `${directory}/${item.name}`,
+                    type: item.type,
                 });
             }
         }
@@ -43,6 +48,16 @@ async function buildTree(directory) {
         } else {
             throw err;
         }
+    }
+
+    if(tree.children && tree.children.length != 0) {
+        tree.children.sort((a, b) => {
+            if(a.type === b.type) {
+                return a.name.localeCompare(b.name);
+            } else {
+                return a.type === ftp.FileType.Directory ? -1 : 1;
+            }
+        });
     }
 
     return {
