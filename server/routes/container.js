@@ -77,6 +77,18 @@ router.post('/restart', [auth, admin], (req, res) => {
     });
 });
 
-
+router.get('/health', (req, res) => {
+    container.inspect((err, data) => {
+        if (err) {
+            console.log(err);
+            res.send({ error: err });
+        } else {
+            res.status(200).send({
+                ok: true,
+                health: data.State.Status,
+            });
+        }
+    });
+});
 
 module.exports = router;
