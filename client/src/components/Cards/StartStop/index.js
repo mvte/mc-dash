@@ -27,17 +27,19 @@ const StartStop = (props) => {
 
     hasPermission = user.roles.includes("admin");
 
+    const { start, stop, restart } = props;
+
     return <>
         <Card>
-        quick controls
+        <b>quick controls</b>
         <Layout>
-            <StyledButton variant="contained" color="success" disabled={!hasPermission}>
+            <StyledButton variant="contained" color="success" disabled={!hasPermission} onClick={start}>
                 start
             </StyledButton>
-            <StyledButton variant="contained" disabled={!hasPermission}>
+            <StyledButton variant="contained" disabled={!hasPermission} onClick={restart}>
                 restart
             </StyledButton>
-            <StyledButton variant="contained" color="error" disabled={!hasPermission}>    
+            <StyledButton variant="contained" color="error" disabled={!hasPermission} onClick={stop}>    
                 stop
             </StyledButton>
         </Layout>
