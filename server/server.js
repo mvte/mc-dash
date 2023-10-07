@@ -32,6 +32,7 @@ if(process.env.ENV == 'prod') {
   const key = Buffer.from(process.env.DOCKER_KEY).toString();
   
   const dir = __dirname + '/../certs';
+  console.log("creating certs in " + dir);
   if(!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
