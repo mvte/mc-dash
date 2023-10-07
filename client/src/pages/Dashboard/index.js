@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid';
-import StatusTest from "../../components/TestComponents/status";
-import GraphTest from "../../components/TestComponents/graphTest";
 import "./index.css";
 
 import StartStop from "../../components/Cards/StartStop";
@@ -28,6 +26,7 @@ const Dashboard = (props) => {
     });
     const [playerList, setPlayerList] = useState([]);
     const [tree, setTree] = useState({});
+    const [health, setHealth] = useState("loading...");
 
 
     const updateStatus = async () => {
@@ -88,6 +87,78 @@ const Dashboard = (props) => {
             });
     }
 
+    const updateHealth = async () => {
+        await axios.get("api/container/health")
+            .then(res => {
+                setHealth(res.data.health);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    const startContainer = async () => {
+        await axios.post("api/container/start", {}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-auth-token': localStorage.getItem('token')
+            }
+        }).then(res => {
+            if(res.data.ok) {
+                updateHealth();
+                alert(res.data.message);
+                return;
+            }
+            
+            console.log(res.data.error);
+            alert(res.data.error);
+        }).catch(err => {
+            console.log(err);
+            alert(err);
+        });
+    }
+
+    const restartContainer = async () => {
+        await axios.post("api/container/restart", {}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-auth-token': localStorage.getItem('token')
+            }
+        }).then(res => {
+            if(res.data.ok) {
+                updateHealth();
+                alert(res.data.message);
+                return;
+            }
+            
+            console.log(res.data.error);
+            alert(res.data.error);
+        }).catch(err => {
+            console.log(err);
+            alert(err);
+        });
+    }
+
+    const stopContainer = async () => {
+        await axios.post("api/container/stop", {}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-auth-token': localStorage.getItem('token')
+            }
+        }).then(res => {
+            if(res.data.ok) {
+                updateHealth();
+                alert(res.data.message);
+                return;
+            }
+            console.log(res.data.error);
+            alert(res.data.error);
+        }).catch(err => {
+            console.log(err);
+            alert(err);
+        });
+    }
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if(token) {
@@ -106,11 +177,13 @@ const Dashboard = (props) => {
         updateStatus();
         updateUptime();
         updateTree();
+        updateHealth();
 
         const timer = setInterval(() => {
             updateStatus();
             updateUptime();
-            console.log('updating status and uptime');
+            updateHealth();
+            console.log('updating status');
         }, 1000*60*2);
 
         return () => clearInterval(timer);
@@ -119,10 +192,14 @@ const Dashboard = (props) => {
     return <>
         <Grid container spacing={2}>
             <Grid item xs={9}>
-                <Welcome user={name} players={0}/>
+                <Welcome user={name} health={health}/>
             </Grid>
             <Grid item xs={3}>
-                <StartStop />
+                <StartStop 
+                    start={startContainer}
+                    restart={restartContainer}
+                    stop={stopContainer}
+                />
             </Grid>
             <Grid item xs={4}>
                 <Info
@@ -146,12 +223,6 @@ const Dashboard = (props) => {
             </Grid>
             <Grid item xs={6}>
                 <Memory />
-            </Grid>
-            <Grid item xs={6}>
-                <StatusTest />
-            </Grid>
-            <Grid item xs={6}>
-                <GraphTest />
             </Grid>
         </Grid>
     </>
