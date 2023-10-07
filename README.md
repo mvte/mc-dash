@@ -22,53 +22,8 @@ note that this port serves the production build, and requires that `npm run buil
 `.env` goes into the `server/` directory, and `certs/` goes into the root
 
 ## plans
-### frontend
-- sidebar components
-  - dashboard
+- finish the rest of the pages
   - settings
-  - console
   - map
-  - backups
-  - sign out
-- top nav bar
-  - username in corner
-  - on click should show drop down with options (user role, and sign out button)
-- dashboard
-  - hello card (this should be wide)
-    - "hello [username], welcome back to your dashboard \n [server_ip]
-    - something like that
-  - start/stop/restart card (admin only)
-  - status card
-    - server is up or down 
-    - container health
-  - server info
-    - name
-    - message of the day
-    - address
-    - version
-  - list of players online
-  - cpu usage graph
-  - memory graph (in gb)
-  - installed plugins/mods
-  - used mui to create bento box layout
-- console
-  - disable the enter command textfield for users
-
-### backend
-- admins should be able to make changes to the settings
-    - figure out how to use ftp
-    - set up user on remote machine that has access to only that folder
-- promotion keys
-    - generate a key that can be used to promote a user to admin
-    - post request requires multiple things:
-        - super secret admin password (.env)
-        - username to be promoted
-    - behind the scenes, a key is generated and stored in a database
-        - the key is a random string of characters
-        - the key is associated with the username
-    - if the user is already an admin, or the super secret admin password is incorrect, then a key is not generated
-    - otherwise, a key is generated and delivered in the response
-    - the user can then use the key to promote themselves to admin through the dashboard
-    - alternatively, the user can message me and i will promote them to admin manually
-- backups
-    - i have no idea where to start with this LOL
+- polish ui
+- deploy to heroku
