@@ -4,7 +4,8 @@ import "./index.css";
 
 
 const Welcome = (props) => {
-
+    let colorString = props.health === "running" ? "green" : props.health === "dead" ? "red" : "orange";
+    console.log(colorString);
     return <>
         <Card>
             <h1>
@@ -14,7 +15,7 @@ const Welcome = (props) => {
                 welcome to your dashboard
             </h1>
             <div>
-                <code>play.mvte.net</code> has <code>{props.players}</code> players online
+                <code>play.mvte.net</code> is <span style={{color: colorString}}> {props.health} </span>
             </div>
         </Card>
     </>
