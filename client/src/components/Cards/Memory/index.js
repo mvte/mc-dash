@@ -65,7 +65,7 @@ const Memory = (props) => {
                 }
                 
                 let newLabels = [...prev.labels, intervalLabel];
-                let newData = [...prev.datasets[0].data, data.memoryUsage];
+                let newData = [...prev.datasets[0].data, data.memoryUsage > 100 ? 100 : data.memoryUsage];
                 if(prev.datasets[0].data.length > 60) {
                     newLabels = newLabels.slice(1);
                     newData = newData.slice(1);

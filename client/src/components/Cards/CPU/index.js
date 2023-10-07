@@ -65,7 +65,7 @@ const CPU = (props) => {
                 }
                 
                 let newLabels = [...prev.labels, intervalLabel];
-                let newData = [...prev.datasets[0].data, data.cpuUsage];
+                let newData = [...prev.datasets[0].data, data.cpuUsage  > 100 ? 100 : data.cpuUsage];
                 if(prev.datasets[0].data.length > 60) {
                     newLabels = newLabels.slice(1);
                     newData = newData.slice(1);
