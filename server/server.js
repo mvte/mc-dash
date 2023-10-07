@@ -1,9 +1,26 @@
 require('dotenv').config();
 const path = require('path');
-
+const fs = require('fs');
 const express = require('express');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
+
+//create certificates
+if(process.env.ENV == 'prod') {
+  const ca = Buffer.from(process.env.DOCKER_CA).toString();
+  const cert = Buffer.from(process.env.DOCKER_CERT).toString();
+  const key = Buffer.from(process.env.DOCKER_KEY).toString();
+  
+  const dir = path.resolve(__dirname, '..', 'certs');
+  console.log("creating certs in " + dir);
+  if(!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+
+  fs.writeFileSync(path.resolve(__dirname, '..', 'certs', 'ca.pem'), ca);
+  fs.writeFileSync(path.resolve(__dirname, '..', 'certs', 'cert.pem'), cert);
+  fs.writeFileSync(path.resolve(__dirname, '..', 'certs', 'key.pem'), key);
+}
 
 //create server and socket
 const app = express();
@@ -23,6 +40,7 @@ const consoleIo = new Server(httpServer, {
 
 //connect to db
 const mongoose = require('mongoose');
+
 
 //declare routes
 const auth = require('./routes/auth');
