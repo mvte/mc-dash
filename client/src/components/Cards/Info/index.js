@@ -25,7 +25,7 @@ const Info = (props) => {
 
     return <>
         <Card>
-            at a glance
+            <b>at a glance</b>
             <NoBullets>
                 <li><b>ip:</b> {props.ip} </li>
                 <li>
