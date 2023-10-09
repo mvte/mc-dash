@@ -21,9 +21,13 @@ note that this port serves the production build, and requires that `npm run buil
 ### secret files
 `.env` goes into the `server/` directory, and `certs/` goes into the root
 
-## plans
+## todo
 - finish the rest of the pages
   - settings
+    - maintain a copy of server.properties as state, send this object to api
   - map
+    - figure out dynmap plugin 
 - polish ui
-- deploy to heroku
+-  file system tree building
+  - right now the tree is built on page load
+  - have the backend periodically build the tree so that the user doesn't have to wait for the tree to be built
