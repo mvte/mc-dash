@@ -42,7 +42,7 @@ async function buildTree(directory) {
     } catch (err) {
         console.log(err);
         if(err.code === 'ECONNRESET') {
-            console.log('reconnecting...');
+            console.log('internal: reconnecting...');
             await client.access(settings);
             return await buildTree(directory);
         } else {
@@ -66,35 +66,38 @@ async function buildTree(directory) {
     }
 }
 
+async function cacheTree() {
+    client.access(settings).then(() => {
+        buildTree('mc/data').then(tree => {
+            tree_cache = tree;
+            cache_expire = Date.now() + 1000 * 60 * 60 * 6; // 6 hours
+            console.log('internal: tree built and cached');
+        }).catch(err => {
+            console.log(err);
+        });
+    })
+}
+
+console.log("internal: initializing tree cache");
+cacheTree().catch(err => {
+    console.log(err);
+});
+setInterval(() => {
+    console.log("internal: regenerating cached tree");
+    cacheTree().catch(err => {
+        console.log(err);
+    });
+}, 1000 * 60 * 60  ); // 1 hour
+
 router.get('/tree', async (req, res) => {
     if(tree_cache && cache_expire > Date.now()) {
-        console.log('sending cached tree');
+        console.log('[SUCCESS] client request: sending cached tree');
         res.send(tree_cache);
         return;
     }
 
-    console.log('building tree')
-    try {
-        client.access(settings).then(() => {
-            buildTree('mc/data').then(tree => {
-                tree_cache = tree;
-                cache_expire = Date.now() + 1000 * 60 * 60 * 24; // 24 hours
-                res.send(tree);
-                console.log('tree built');
-            }).catch(err => {
-                console.log(err);
-                res.send({
-                    error: err,
-                });
-            });
-        }).catch(err => {
-            console.log(err);
-            res.send({ error: err });
-        });
-    } catch (err) {
-        console.log(err);
-        res.send({ error: err });
-    }
+    console.log('[ERROR] client request: cache miss retrieving tree');
+    res.send({ error: 'client request: cache miss retrieving tree' });
 });
 
 module.exports = router;
