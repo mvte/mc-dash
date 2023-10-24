@@ -9,7 +9,7 @@ const FullHeightDiv = styled('div')({
 function Map() {
     return (
         <FullHeightDiv>
-            <MapFrame src="http://play.mvte.net:8123/?worldname=world&mapname=surface" />
+            <MapFrame src="https://map.mvte.net/?worldname=world&mapname=surface" />
         </FullHeightDiv>
     );
 }
