@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Console from './pages/Console';
 import Layout from './components/Layout';
 import WIP from './pages/WIP';
+import Map from './pages/Map';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 
@@ -44,7 +45,7 @@ function App() {
                 <Route index element={<WIP />} />
             </Route>
             <Route path="/map" element={<Layout />}>
-                <Route index element={<WIP />} />
+                <Route index element={<Map />} />
             </Route>
             <Route path="*" element={<h1>404</h1>} />
         </Routes>
