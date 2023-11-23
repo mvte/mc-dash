@@ -40,12 +40,12 @@ async function buildTree(directory) {
             }
         }
     } catch (err) {
-        console.log(err);
         if(err.code === 'ECONNRESET') {
-            console.log('internal: reconnecting...');
+            console.log(`[${new Date().toISOString()}]`, '[INFO] internal: reconnecting to ftp server...');
             await client.access(settings);
             return await buildTree(directory);
         } else {
+            console.log(`[${new Date().toISOString()}]`, '[ERROR] internal: failed to build tree', err);
             throw err;
         }
     }
@@ -71,32 +71,32 @@ async function cacheTree() {
         buildTree('mc/data').then(tree => {
             tree_cache = tree;
             cache_expire = Date.now() + 1000 * 60 * 60 * 6; // 6 hours
-            console.log('internal: tree built and cached');
+            console.log(`[${new Date().toISOString()}]`, '[INFO] internal: tree built and cached');
         }).catch(err => {
-            console.log(err);
+            console.error(`[${new Date().toISOString()}]`, '[ERROR] internal: failed to build and cache tree', err);
         });
     })
 }
 
-console.log("internal: initializing tree cache");
+console.log(`[${new Date().toISOString()}]`, '[INFO] internal: initializing tree cache');
 cacheTree().catch(err => {
-    console.log(err);
+    console.log(`[${new Date().toISOString()}]`, err);
 });
 setInterval(() => {
-    console.log("internal: regenerating cached tree");
+    console.log(`[${new Date().toISOString()}]`, '[INFO] internal: regenerating cached tree');
     cacheTree().catch(err => {
-        console.log(err);
+        console.log(`[${new Date().toISOString()}]`, err);
     });
 }, 1000 * 60 * 60  ); // 1 hour
 
 router.get('/tree', async (req, res) => {
     if(tree_cache && cache_expire > Date.now()) {
-        console.log('[SUCCESS] client request: sending cached tree');
+        console.log(`[${new Date().toISOString()}]`, '[SUCCESS] client request: sending cached tree');
         res.send(tree_cache);
         return;
     }
 
-    console.log('[ERROR] client request: cache miss retrieving tree');
+    console.error(`[${new Date().toISOString()}]`, '[ERROR] client request: cache miss retrieving tree');
     res.send({ error: 'client request: cache miss retrieving tree' });
 });
 

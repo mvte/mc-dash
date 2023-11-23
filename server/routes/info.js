@@ -14,15 +14,17 @@ const axios = require('axios');
 
 
 router.get('/name', (req, res) => {
+    console.log(`[${new Date().toISOString()}]`, "[INFO] received request for /name");
     res.send({ name: "jan's server"});
 });
 
 router.get('/status', (req, res) => {
+    console.log(`[${new Date().toISOString()}]`, "[INFO] received request for /status");
     axios.get("https://api.mcstatus.io/v2/status/java/play.mvte.net")
     .then(response => {
         res.send(response.data);
     }).catch(err => {
-        console.log(err);
+        console.log(`[${new Date().toISOString()}]`, "[ERROR] could not retrieve status: ", err);
         res.send({ error: err });
     });
 });
