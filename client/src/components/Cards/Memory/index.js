@@ -49,7 +49,6 @@ const Memory = (props) => {
     };
 
     useEffect(() => {
-        console.log('connecting to socket');
         let timeStart = Date.now();
         const socket = io({ //this is how you connect to the data stream
           path:'/api/performance/stream', //this path is necessary to connect to the stream

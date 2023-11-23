@@ -15,11 +15,11 @@ let container = docker.getContainer(process.env.CONTAINER_ID);
 
 module.exports = function (io) {
     io.on('connection', (socket) => {
-        console.log('client connected to logs stream');
+        console.log(`[${new Date().toISOString()}]`, '[SUCCESS] client connected to logs stream');
 
         container.logs({ follow: true, stdout: true, stderr: true }, (err, stream) => {
             if (err) {
-                console.log(err);
+                console.log(`[${new Date().toISOString()}]`, err);
             } else {
                 stream.on('data', (chunk) => {
                     const data = chunk.toString();
@@ -29,19 +29,18 @@ module.exports = function (io) {
                 });
                 
                 stream.on('error', () => {
-                    console.log('error');
+                    console.error(`[${new Date().toISOString()}]`, '[ERROR] something went wrong in the logs stream');
                 });
 
                 stream.on('disconnect', () => {
-                    console.log('stream ended');
+                    console.log(`[${new Date().toISOString()}]`, '[INFO] logs stream ended');
                     stream.destroy();
                 });
             }
         });
 
         socket.on('disconnect', () => {
-            console.log('client disconnected');
+            console.log(`[${new Date().toISOString()}]`, '[INFO] client disconnected');
         });
     });
 }
-    

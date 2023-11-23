@@ -75,5 +75,5 @@ app.get('/*', (req, res) => {
 });
 
 httpServer.listen(port, () => {
-  console.log(`listening on port ${port}`);
+  console.log(`[${new Date().toISOString()}]`, `[INFO] listening on port ${port}`);
 });

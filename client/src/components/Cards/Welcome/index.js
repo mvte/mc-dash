@@ -5,7 +5,6 @@ import "./index.css";
 
 const Welcome = (props) => {
     let colorString = props.health === "running" ? "green" : props.health === "dead" ? "red" : "orange";
-    console.log(colorString);
     return <>
         <Card>
             <h1>

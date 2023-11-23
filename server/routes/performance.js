@@ -25,8 +25,10 @@ const docker = new Docker({
 let container = docker.getContainer(process.env.CONTAINER_ID);
 
 router.get('/stats', (req, res) => {
+    console.log(`[${new Date().toISOString()}]`, "[INFO] received request for /stats");
     container.stats({ stream: false }, (err, data) => {
         if (err) {
+            console.error(`[${new Date().toISOString()}]`, '[ERROR] failed to get container stats:', err);
             res.send({ error: err });
         } else {
             //calc memory usage
@@ -37,7 +39,8 @@ router.get('/stats', (req, res) => {
             const cpuDelta = data.cpu_stats.cpu_usage.total_usage - data.precpu_stats.cpu_usage.total_usage;
             const systemDelta = data.cpu_stats.system_cpu_usage - data.precpu_stats.system_cpu_usage;
             const cpuUsageAsPercentage = (cpuDelta / systemDelta) * data.cpu_stats.online_cpus * 100;
-
+            
+            console.log(`[${new Date().toISOString()}]`, "[SUCCESS] sent response for /stats");
             res.send({
                 memoryUsage: memUsageAsPercentage,
                 cpuUsage: cpuUsageAsPercentage,
@@ -48,14 +51,17 @@ router.get('/stats', (req, res) => {
 });
 
 router.get('/uptime', (req, res) => {
+    console.log(`[${new Date().toISOString()}]`, "[INFO] received request for /uptime");
     container.inspect((err, data) => {
         if (err) {
+            console.error(`[${new Date().toISOString()}]`, '[ERROR] failed to inspect container:', err);
             res.send({ error: err });
         } else {
             if(data.State.Status !== "running") {
                 res.send({ uptime: 0 });
             } else {
                 const uptime = new Date() - new Date(data.State.StartedAt);
+                console.log(`[${new Date().toISOString()}]`, "[SUCCESS] sent response for /uptime", uptime);
                 res.send({ uptime: uptime });
             }
         }

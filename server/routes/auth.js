@@ -12,6 +12,7 @@ mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopolo
 
 
 router.post('/register', async (req, res) => {
+	console.log(`[${new Date().toISOString()}]`, '[INFO] received request for /register');
 	const { username, password: plainTextPassword } = req.body
 
 	if (!username || typeof username !== 'string' || !isAlphaNumeric(username)) {
@@ -25,9 +26,10 @@ router.post('/register', async (req, res) => {
 			admin: false,
 		});
 		try {
-			const response = await user.save()
-			console.log('user created successfully: ', response)
+			await user.save()
+			console.log(`[${new Date().toISOString()}]`, '[SUCCESS] user created successfully');
 		} catch (error) {
+			console.error(`[${new Date().toISOString()}]`, '[ERROR] failed to create user', error);
 			if (error.code === 11000) {
 				// duplicate key
 				return res.json({ ok: false, error: 'username already exists' })
@@ -43,11 +45,13 @@ router.post('/register', async (req, res) => {
 			process.env.JWT_SECRET,
 			{ expiresIn: '24h' }
 		);
+		console.log(`[${new Date().toISOString()}]`, '[SUCCESS] token generated');
 		res.json({ ok: true, token: token })
 	});
 });
 
 router.post('/login', async (req, res) => {
+	console.log(`[${new Date().toISOString()}]`, '[INFO] received request for /login');
 	const { username, password } = req.body
 	User.findOne({ username: username })
 	.then(user => {
@@ -58,7 +62,7 @@ router.post('/login', async (req, res) => {
 
 		bcrypt.compare(password, user.password, (err, result) => {
 			if(err) {
-				console.log(err);
+				console.error(`[${new Date().toISOString()}]`, "[ERROR] failed to compare hashed password", err);
 				return res.json({ ok: false, error: 'something went wrong please try again' });
 			}
 
@@ -71,14 +75,16 @@ router.post('/login', async (req, res) => {
 					process.env.JWT_SECRET,
 					{ expiresIn: '24h' }
 				);
+				console.log(`[${new Date().toISOString()}]`, '[SUCCESS] user logged in and token generated');
 				return res.json({ ok: true, token: token });
 			} else {
+				console.log(`[${new Date().toISOString()}]`, '[INFO] user entered credentials incorrectly');
 				return res.json({ ok: false, error: 'username or password is incorrect' });
 			}
 		});
 	})
 	.catch(err => {
-		console.log(err);
+		console.error(`[${new Date().toISOString()}]`, "[ERROR] could not find user", err);
 		return res.json({ ok: false, error: 'something went wrong please try again' });
 	});
 });

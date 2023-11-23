@@ -79,7 +79,6 @@ const Dashboard = (props) => {
     const updateTree = async () => {
         await axios.get("api/datagrab/tree")
             .then(res => {
-                console.log(res.data);
                 setTree(res.data);
             })
             .catch(err => {
@@ -167,7 +166,6 @@ const Dashboard = (props) => {
                 localStorage.removeItem('token');
                 navigate('/');
             } else {
-                console.log(user.name + " is logged in");
                 setName(user.name);
             }
         } else {

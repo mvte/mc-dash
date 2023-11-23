@@ -15,11 +15,11 @@ let container = docker.getContainer(process.env.CONTAINER_ID);
 
 module.exports = function (io) {
     io.on('connection', (socket) => {
-        console.log('client connected to performance stream');
+        console.log(`[${new Date().toISOString()}]`, '[SUCCESS] client connected to performance stream');
 
         container.stats({ stream: true }, (err, stream) => {
             if (err) {
-                console.log(err);
+                console.log(`[${new Date().toISOString()}]`, "[ERROR]", err);
             } else {
                 stream.on('data', (chunk) => {
                     const data = JSON.parse(chunk.toString());
@@ -39,18 +39,18 @@ module.exports = function (io) {
                 });
 
                 stream.on('error', () => {
-                    console.log('error');
+                    console.log(`[${new Date().toISOString()}]`, '[ERROR] something went wrong in the performance stream');
                 });
 
                 stream.on('disconnect', () => {
-                    console.log('stream ended');
+                    console.log(`[${new Date().toISOString()}]`, '[INFO] performance stream ended');
                     stream.destroy();
                 });
             }
         });
 
         socket.on('disconnect', () => {
-            console.log('client disconnected');
+            console.log(`[${new Date().toISOString()}]`, '[INFO] client disconnected');
         });
     });
 }
