@@ -20,7 +20,7 @@ function App() {
         'Ubuntu',
         'sans-serif',
       ].join(','),
-      fontSize: 16,
+      fontSize: 18,
       fontWeightLight: 300, 
       fontWeightRegular: 400,
       fontWeightMedium: 500,
