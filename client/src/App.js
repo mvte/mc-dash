@@ -6,6 +6,7 @@ import Console from './pages/Console';
 import Layout from './components/Layout';
 import WIP from './pages/WIP';
 import Map from './pages/Map';
+import Settings from './pages/Settings';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 
@@ -40,9 +41,9 @@ function App() {
             </Route>
             <Route path="/console" element={<Layout />}>
                 <Route index element={<Console />} />
-            </Route>
+            </Route>  
             <Route path="/settings" element={<Layout />}>
-                <Route index element={<WIP />} />
+                <Route index element={<Settings />} />
             </Route>
             <Route path="/map" element={<Layout />}>
                 <Route index element={<Map />} />
