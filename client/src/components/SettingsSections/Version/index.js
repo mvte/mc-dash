@@ -39,7 +39,6 @@ const Version = (props) => {
                             </Grid>
                         </Grid>
                     </Panel>
-                    
                 </Grid>
             </Grid>
         </div>
