@@ -15,7 +15,7 @@ const Identity = (props) => {
                     <Grid item xs={10}>
                         <SettingsInput
                             id="motd"
-                            placeholder="placeholder motd will be the server's actual motd" // get from props
+                            placeholder={props.motd}
                             fullWidth
                             size="small"
                             autoComplete="off"
