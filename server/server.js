@@ -22,6 +22,22 @@ if(process.env.ENV == 'prod') {
   fs.writeFileSync(path.resolve(__dirname, '..', 'certs', 'key.pem'), key);
 }
 
+//create mc dir for server files (properties and compose)
+const mcDir = path.resolve(__dirname, '..', 'mc');
+console.log("creating mc dir in " + mcDir);
+if(!fs.existsSync(mcDir)) {
+  fs.mkdirSync(mcDir);
+}
+//write empty properties and compose files
+const propertiesPath = path.resolve(__dirname, '..', 'mc', 'server.properties');
+const composePath = path.resolve(__dirname, '..', 'mc', 'docker-compose.yml');
+if(!fs.existsSync(propertiesPath)) {
+  fs.writeFileSync(propertiesPath, '');
+}
+if(!fs.existsSync(composePath)) {
+  fs.writeFileSync(composePath, '');
+}
+
 //create server and socket
 const app = express();
 const httpServer = createServer(app);
