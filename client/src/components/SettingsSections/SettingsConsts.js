@@ -22,8 +22,8 @@ const P = styled('p')`
 
 const SettingsInput = styled(InputBase)({
     '& .MuiInputBase-input': {
-        color: '#1E1E1E',
-        backgroundColor: 'white',
+        color: 'white',
+        backgroundColor: '#1E1E1E',
         borderRadius: '5px',
         height: '30px',
         padding: '0px 10px',
@@ -53,7 +53,7 @@ const ComboBox = ({placeholder, ...props}) => {
                 inputProps={{...rest.inputProps}}
                 endAdornment={
                     <StyledInputAdornment position="end">
-                        <ArrowDropDown style={{ color: "#1e1e1e", pointerEvents: "none", overflow: "visible" }}/>
+                        <ArrowDropDown style={{ color: "white", pointerEvents: "none", overflow: "visible" }}/>
                     </StyledInputAdornment>
                 }
             />
