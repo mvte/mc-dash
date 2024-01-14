@@ -28,8 +28,8 @@ const testProperties = [
 const Properties = (props) => {
 
     // get actual properties from server (for now we use test properties)
-    const properties = props.properties || testProperties;
-
+    const properties = !props.properties.error ? props.properties : testProperties;
+    
     //splice properties into two arrays
     const mid = Math.ceil(properties.length / 2);
     const leftProperties = properties.slice(0, mid);
