@@ -1,8 +1,22 @@
-import { ArrowDropDown } from '@mui/icons-material';
-import { H1, Panel, P, ComboBox, SettingsInput, StyledInputAdornment } from '../SettingsConsts'
-import { Autocomplete, Grid, InputAdornment } from '@mui/material';
+import { H1, Panel, P, ComboBox,} from '../SettingsConsts'
+import { Grid } from '@mui/material';
+import { useState } from 'react';
 
 const Version = (props) => {
+    const getCompatibleVersions = (type) => {
+        if(props.compatibility) {
+            return props.compatibility[type];
+        }
+        else {
+            return [];
+        }
+    }
+    const [compatibleVersions, setCompatibleVersions] = useState(getCompatibleVersions(props.type));
+
+    const onTypeChange = (_, value) => {
+        console.log("change detected", value);
+        setCompatibleVersions(getCompatibleVersions(value));
+    }
 
     return (
         <div>
@@ -17,8 +31,8 @@ const Version = (props) => {
                             <Grid item xs={8}>
                                 <ComboBox 
                                     id="version"
-                                    placeholder="current version"
-                                    options={props.versions}
+                                    placeholder={props.version}
+                                    options={compatibleVersions}
                                 />
                             </Grid>
                         </Grid>
@@ -33,8 +47,9 @@ const Version = (props) => {
                             <Grid item xs={8}>
                                 <ComboBox 
                                     id="type"
-                                    placeholder="current type"
-                                    options={props.versions}
+                                    placeholder={props.type}
+                                    options={props.compatibility ? Object.keys(props.compatibility) : []}
+                                    onInputChange={onTypeChange}
                                 />
                             </Grid>
                         </Grid>
