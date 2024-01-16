@@ -1,23 +1,18 @@
 import { H1, Panel, P, ComboBox,} from '../SettingsConsts'
 import { Grid } from '@mui/material';
-import { useState } from 'react';
 
 const Version = (props) => {
-    const getCompatibleVersions = (type) => {
-        if(props.compatibility) {
+    const getCompatibleVersions =  (type) => {
+        if(type && props.compatibility) {
             return props.compatibility[type];
-        }
-        else {
+        } else if (props.type) {
+            return props.compatibility[props.type];
+        } else {
             return [];
         }
     }
-    const [compatibleVersions, setCompatibleVersions] = useState(getCompatibleVersions(props.type));
 
-    const onTypeChange = (_, value) => {
-        console.log("change detected", value);
-        setCompatibleVersions(getCompatibleVersions(value));
-    }
-
+    const compatibleVersions = getCompatibleVersions(props.type);
     return (
         <div>
             <H1>version</H1>
@@ -49,7 +44,6 @@ const Version = (props) => {
                                     id="type"
                                     placeholder={props.type}
                                     options={props.compatibility ? Object.keys(props.compatibility) : []}
-                                    onInputChange={onTypeChange}
                                 />
                             </Grid>
                         </Grid>
