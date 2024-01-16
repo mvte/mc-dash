@@ -28,7 +28,7 @@ const Identity = (props) => {
                         <SettingsButton variant="contained" startIcon={<CloudUploadIcon />}>
                             upload
                         </SettingsButton>
-                        <img src="https://placehold.co/64" alt="server icon"/>
+                        <img src="/api/datagrab/icon" alt="server icon"/>
                     </Grid>
                 </Grid>
             </Panel>
