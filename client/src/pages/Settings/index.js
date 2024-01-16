@@ -20,6 +20,8 @@ const Settings = () => {
     const [properties, setProperties] = useState([]);
     const [motd, setMotd] = useState('');
     const [server, setServer] = useState({});
+    const [players, setPlayers] = useState({});
+    const [formData, setFormData] = useState({});
 
     const initProperties = async () => {
         try {
@@ -33,7 +35,9 @@ const Settings = () => {
     const initMotd = async () => {
         try {
             const response = await axios.get('/api/datagrab/properties?properties=motd');
-            setMotd(response.data[0].value);
+            // remove color codes and escape characters
+            const cleanMotd = response.data[0].value.replace(/§./g, '').replace(/\\/g, '');
+            setMotd(cleanMotd);
         }
         catch (error) {
             console.error(error);
@@ -53,27 +57,72 @@ const Settings = () => {
             console.error(error);
         }
     }
+    const initPlayers = async () => {
+        try {
+            const banlistResponse= await axios.get('/api/datagrab/banlist');
+            const oplistResponse = await axios.get('/api/datagrab/oplist');
+            const whitelistResponse = await axios.get('/api/datagrab/whitelist');
+            setPlayers({
+                bannedPlayers: banlistResponse.data.bannedPlayers,
+                bannedIps: banlistResponse.data.bannedIps,
+                ops: oplistResponse.data,
+                whitelist: whitelistResponse.data,
+            })
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
 
     useEffect(() => {
         initProperties();
         initMotd();
         initServerVersion();
+        initPlayers();
     }, []);
+
+    const onChange = (e) => {
+        setFormData(prev => {
+            return {
+                ...prev,
+                [e.target.id]: e.target.value,
+            }
+        
+        })
+        console.log(formData);
+    }
+    const onOptionsChange = (e, value) => {
+        setFormData(prev => {
+            return {
+                ...prev,
+                [e.target.id]: value,
+            }
+        });
+    }
 
     return (
         <SettingsPage>
             <Identity 
                 motd={motd}
+                onChange={onChange}
             />
             <Version 
                 version={server.version}
                 type={server.type}
                 compatibility={server.compatibility}
+                onOptionsChange={onOptionsChange}
             />
             <Properties 
                 properties={properties}
+                onChange={onChange}
+                onOptionsChange={onOptionsChange}
             />
-            <Players />
+            <Players 
+                bannedPlayers={players.bannedPlayers}
+                bannedIps={players.bannedIps}
+                ops={players.ops}
+                whitelist={players.whitelist}
+            />
         </SettingsPage>
     )
 }
