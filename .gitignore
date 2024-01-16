@@ -423,4 +423,4 @@ $RECYCLE.BIN/
 
 ## other
 certs/
-mc/docker-compose.yml
+mc/*
