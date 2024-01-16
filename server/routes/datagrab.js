@@ -3,6 +3,7 @@ const express = require('express');
 const fs = require('fs');
 const router = express.Router();
 const OpQueue = require('../utils/opqueue');
+const path = require('path');
 
 // client.ftp.verbose = true;
 const settings = {
@@ -312,10 +313,10 @@ const initializeServer = async () => {
     const compose = fs.readFileSync('mc/docker-compose.yml', 'utf8');
 
     const lines = compose.split('\n');
-    const version = lines.find(line => line.includes('VERSION:')).split(':')[1].trim();
+    const version = lines.find(line => line.includes('VERSION:')).split(':')[1].trim()
     const type = lines.find(line => line.includes('TYPE:')).split(':')[1].trim();
 
-    server = { version, type };
+    server = { version: version.replaceAll('"', ''), type: type.toLocaleLowerCase().replaceAll('"', '') };
     server_expire = Date.now() + 1000 * 60 * 60 * 6; // 6 hours
 
     client.close();
@@ -324,5 +325,97 @@ const initializeServer = async () => {
 router.get('/version/compatibility', async (req, res) => {
     res.send(SERVER_TYPE_COMPATIBILITY);
 });
+
+/* server icon */
+const iconPath = path.resolve(__dirname, '..', '..', 'mc', 'server-icon.png');
+
+router.get('/icon', async (req, res) => {
+    try {
+        await opq.add(getIcon);
+        console.log(`[${new Date().toISOString()}]`, '[SUCCESS] client request: sending server icon');
+        res.sendFile(iconPath);
+    } catch (error) {
+        console.error(`[${new Date().toISOString()}]`, '[ERROR] client request: failed to retrieve server icon', error);
+        res.status(500).send({ error: 'failed to retrieve server icon' });
+    }
+});
+
+const getIcon = async () => {
+    const client = new ftp.Client();
+    return client.access(settings)
+        .then(() => {
+            return client.downloadTo(iconPath, 'mc/data/server-icon.png');
+        })
+}
+
+
+/* ============================PLAYERS============================ */
+let playerCacheExpire = null;
+
+router.get("/whitelist", async (req, res) => {
+    if(!playerCacheExpire || playerCacheExpire < Date.now()) {
+        try {
+            await opq.add(initializePlayerFiles);
+        } catch(err) { 
+            console.error(`[${new Date().toISOString()}]`, '[ERROR] client request: failed to retrieve player files', err);
+            res.status(500).send({ error: 'client request: failed to retrieve player files', });
+            return;
+        }
+    }
+
+    const whitelist = fs.readFileSync('mc/whitelist.json', 'utf8');
+    console.log(`[${new Date().toISOString()}]`, '[SUCCESS] client request: sending whitelist');
+    res.send(JSON.parse(whitelist));
+});
+
+router.get("/oplist", async (req, res) => {
+    if(!playerCacheExpire || playerCacheExpire < Date.now()) {
+        try {
+            await opq.add(initializePlayerFiles);
+        } catch(err) { 
+            console.error(`[${new Date().toISOString()}]`, '[ERROR] client request: failed to retrieve player files', err);
+            res.status(500).send({ error: 'client request: failed to retrieve player files', });
+            return;
+        }
+    }
+
+    const oplist = fs.readFileSync('mc/ops.json', 'utf8');
+    console.log(`[${new Date().toISOString()}]`, '[SUCCESS] client request: sending oplist');
+    res.send(JSON.parse(oplist));
+});
+
+router.get("/banlist", async (req, res) => {
+    if(!playerCacheExpire || playerCacheExpire < Date.now()) {
+        try {
+            await opq.add(initializePlayerFiles);
+        } catch(err) { 
+            console.error(`[${new Date().toISOString()}]`, '[ERROR] client request: failed to retrieve player files', err);
+            res.status(500).send({ error: 'client request: failed to retrieve player files', });
+            return;
+        }
+    }
+
+    const bannedPlayers = fs.readFileSync('mc/banned-players.json', 'utf8');
+    const bannedIps = fs.readFileSync('mc/banned-ips.json', 'utf8');
+    console.log(`[${new Date().toISOString()}]`, '[SUCCESS] client request: sending banlist');
+    res.send({
+        bannedPlayers: JSON.parse(bannedPlayers),
+        bannedIps: JSON.parse(bannedIps),
+    });
+});
+
+const initializePlayerFiles = () => {
+    const client = new ftp.Client();
+    return client.access(settings)
+        .then(() => client.downloadTo('mc/whitelist.json', 'mc/data/whitelist.json'))
+        .then(() => client.downloadTo('mc/ops.json', 'mc/data/ops.json'))
+        .then(() => client.downloadTo('mc/banned-players.json', 'mc/data/banned-players.json'))
+        .then(() => client.downloadTo('mc/banned-ips.json', 'mc/data/banned-ips.json'))
+        .finally(() => {
+            playerCacheExpire = Date.now() + 1000 * 60 * 30; // 30 minutes
+            client.close();
+        });
+}
+
 
 module.exports = router;
