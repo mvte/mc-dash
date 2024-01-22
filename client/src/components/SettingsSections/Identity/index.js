@@ -19,6 +19,8 @@ const Identity = (props) => {
                             fullWidth
                             size="small"
                             autoComplete="off"
+                            onChange={props.onChange}
+                            value={props.formData.motd || ""}
                         />
                     </Grid>
                     <Grid item xs={2}>

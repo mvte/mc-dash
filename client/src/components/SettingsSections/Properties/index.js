@@ -50,6 +50,9 @@ const Properties = (props) => {
                 placeholder={property.value}
                 options={property.options}
                 disabled={property.readonly}
+                onChange={props.onChange}
+                onInputChange={props.onOptionsChange}
+                value={props.formData[property.name] || null}
             />
         }
         else if (property.blank) {
@@ -61,6 +64,8 @@ const Properties = (props) => {
                 disabled={property.readonly}
                 fullWidth
                 autoComplete="off"
+                onChange={props.onChange}
+                value={props.formData[property.name] || ""}
             />
         }
     }
