@@ -11,8 +11,12 @@ const Version = (props) => {
             return [];
         }
     }
+    const typeChange = (e, value) => {
+        props.onOptionsChange(e, value);
+        props.clearVersions();
+    }
 
-    const compatibleVersions = getCompatibleVersions(props.type);
+    const compatibleVersions = getCompatibleVersions(props.formData.type);
     return (
         <div>
             <H1>version</H1>
@@ -28,6 +32,9 @@ const Version = (props) => {
                                     id="version"
                                     placeholder={props.version}
                                     options={compatibleVersions}
+                                    value={props.formData.version || null}
+                                    onChange={props.onChange}
+                                    onInputChange={props.onOptionsChange}
                                 />
                             </Grid>
                         </Grid>
@@ -44,6 +51,9 @@ const Version = (props) => {
                                     id="type"
                                     placeholder={props.type}
                                     options={props.compatibility ? Object.keys(props.compatibility) : []}
+                                    value={props.formData.type || null}
+                                    onChange={props.onChange}
+                                    onInputChange={typeChange}
                                 />
                             </Grid>
                         </Grid>
