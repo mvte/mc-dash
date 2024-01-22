@@ -4,8 +4,10 @@ import Properties from '../../components/SettingsSections/Properties';
 import Players from '../../components/SettingsSections/Players';
 
 import { styled } from "@mui/material/styles"; 
+import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { SettingsButton } from '../../components/SettingsSections/SettingsConsts';
 
 const SettingsPage = styled('div')({
     paddingLeft: '1rem',
@@ -82,6 +84,8 @@ const Settings = () => {
     }, []);
 
     const onChange = (e) => {
+        if(e.target.className.startsWith("MuiAutocomplete")) return;
+
         setFormData(prev => {
             return {
                 ...prev,
@@ -89,15 +93,47 @@ const Settings = () => {
             }
         
         })
-        console.log(formData);
     }
     const onOptionsChange = (e, value) => {
+        if(!e) return;
+
+        setFormData(prev => {
+            const keyList = e.target.id.split('-');
+            keyList.pop();
+            keyList.pop();
+            const key = keyList.join('-');
+
+            return {
+                ...prev,
+                [key]: value,
+            }
+        });
+    }
+
+    const clearVersions = () => {
         setFormData(prev => {
             return {
                 ...prev,
-                [e.target.id]: value,
+                version: '',
             }
-        });
+        })
+    }
+
+    const submit = (e) => {
+        e.preventDefault();
+        //clean up formData
+        const formDataCopy = {...formData};
+        for(const key in formDataCopy) {
+            if(formDataCopy[key] === '' || key === '') {
+                delete formDataCopy[key];
+            }
+        }
+        setFormData(formDataCopy);
+        console.log(formDataCopy);
+    }
+    const discard = (e) => {
+        e.preventDefault();
+        setFormData({});
     }
 
     return (
@@ -105,17 +141,22 @@ const Settings = () => {
             <Identity 
                 motd={motd}
                 onChange={onChange}
+                formData={formData}
             />
             <Version 
                 version={server.version}
                 type={server.type}
                 compatibility={server.compatibility}
                 onOptionsChange={onOptionsChange}
+                onChange={onChange}
+                clearVersions={clearVersions}
+                formData={formData}
             />
             <Properties 
                 properties={properties}
                 onChange={onChange}
                 onOptionsChange={onOptionsChange}
+                formData={formData}
             />
             <Players 
                 bannedPlayers={players.bannedPlayers}
@@ -123,6 +164,24 @@ const Settings = () => {
                 ops={players.ops}
                 whitelist={players.whitelist}
             />
+            <div style={{display: "flex", justifyContent: "end", gap: "10px"}}>
+                <SettingsButton 
+                    variant="contained" 
+                    color="error" 
+                    startIcon={<SaveIcon />}
+                    onClick={discard}
+                >
+                    discard
+                </SettingsButton>
+                <SettingsButton 
+                    variant="contained" 
+                    color="success" 
+                    startIcon={<SaveIcon />}
+                    onClick={submit}
+                >
+                    save
+                </SettingsButton>
+            </div>
         </SettingsPage>
     )
 }
