@@ -5,6 +5,7 @@ import Players from '../../components/SettingsSections/Players';
 
 import { styled } from "@mui/material/styles"; 
 import SaveIcon from '@mui/icons-material/Save';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { SettingsButton } from '../../components/SettingsSections/SettingsConsts';
@@ -109,6 +110,24 @@ const Settings = () => {
             }
         });
     }
+    const onClear = (key, autocomplete) => {
+        if(autocomplete) {
+            setFormData(prev => {
+                return {
+                    ...prev,
+                    [key]: null,
+                }
+            })
+            return;
+        }
+
+        setFormData(prev => {
+            return {
+                ...prev,
+                [key]: '',
+            }
+        })
+    }
 
     const clearVersions = () => {
         setFormData(prev => {
@@ -124,7 +143,7 @@ const Settings = () => {
         //clean up formData
         const formDataCopy = {...formData};
         for(const key in formDataCopy) {
-            if(formDataCopy[key] === '' || key === '') {
+            if(formDataCopy[key] === '' || formDataCopy[key] === null || key === '' || key === null) {
                 delete formDataCopy[key];
             }
         }
@@ -142,6 +161,7 @@ const Settings = () => {
                 motd={motd}
                 onChange={onChange}
                 formData={formData}
+                onClear={onClear}
             />
             <Version 
                 version={server.version}
@@ -151,12 +171,14 @@ const Settings = () => {
                 onChange={onChange}
                 clearVersions={clearVersions}
                 formData={formData}
+                onClear={onClear}
             />
             <Properties 
                 properties={properties}
                 onChange={onChange}
                 onOptionsChange={onOptionsChange}
                 formData={formData}
+                onClear={onClear}
             />
             <Players 
                 bannedPlayers={players.bannedPlayers}
@@ -168,7 +190,7 @@ const Settings = () => {
                 <SettingsButton 
                     variant="contained" 
                     color="error" 
-                    startIcon={<SaveIcon />}
+                    startIcon={<DeleteIcon />}
                     onClick={discard}
                 >
                     discard

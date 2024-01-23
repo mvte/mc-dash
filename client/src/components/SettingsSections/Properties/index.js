@@ -53,6 +53,7 @@ const Properties = (props) => {
                 onChange={props.onChange}
                 onInputChange={props.onOptionsChange}
                 value={props.formData[property.name] || null}
+                onClear={props.onClear}
             />
         }
         else if (property.blank) {

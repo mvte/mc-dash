@@ -2,6 +2,8 @@ import { styled } from "@mui/material/styles";
 import InputBase from '@mui/material/InputBase';
 import { Button, Autocomplete, InputAdornment } from "@mui/material";
 import { ArrowDropDown } from '@mui/icons-material';
+import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from '@mui/material/IconButton';
 
 const Panel = styled('div')`
     background-color: #2c2f33;
@@ -39,22 +41,34 @@ const StyledInputAdornment = styled(InputAdornment)({
     right: 0,
 });
 
-const ComboBox = ({placeholder, ...props}) => {
+const ComboBox = ({placeholder, onClear, value, id, ...props}) => {
     return <Autocomplete  
         {...props}
+        id={id}
+        value={value}
         noOptionsText="womp womp"
+        clearOnEscape
+        clearText="clear"
         renderInput={(params) => {
             const { InputProps, InputLabelProps, ...rest } = params;
-
             return <SettingsInput
                 {...rest}
                 placeholder={placeholder}
                 inputRef={InputProps.ref}
                 inputProps={{...rest.inputProps}}
                 endAdornment={
-                    <StyledInputAdornment position="end">
-                        <ArrowDropDown style={{ color: "white", pointerEvents: "none", overflow: "visible" }}/>
-                    </StyledInputAdornment>
+                    <>
+                        {value &&
+                            <StyledInputAdornment position="end" style={{right: "20px"}}>
+                                <IconButton onClick={() => onClear(id, true)}>
+                                    <ClearIcon fontSize="small" />
+                                </IconButton>
+                            </StyledInputAdornment>
+                        }
+                        <StyledInputAdornment position="end">
+                            <ArrowDropDown style={{ color: "white", pointerEvents: "none", overflow: "visible" }}/>
+                        </StyledInputAdornment>
+                    </>
                 }
             />
         }}
